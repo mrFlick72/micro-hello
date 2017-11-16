@@ -1,0 +1,22 @@
+version: "2.1"
+
+services:
+
+  vector:
+    image: netflixoss/vector:latest
+    ports:
+      - "8090:80"
+    networks:
+      - monitor
+
+  atlas:
+    image: netflixoss/atlas:1.4.3
+    ports:
+        - "7101:7101"
+    networks:
+      - monitor
+
+
+networks:
+  monitor:
+    driver: bridge

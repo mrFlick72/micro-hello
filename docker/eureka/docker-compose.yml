@@ -1,0 +1,28 @@
+version: "3"
+
+services:
+  eureka-1:
+    image: hello-world/eureka-server:lastest
+    ports:
+      - "8761:8761"
+    environment:
+      - eureka.client.healthcheck.enabled=true
+      - server.port=8761
+      - management.security.enabled=false
+      - eureka.instance.preferIpAddress=true
+      - eureka.client.serviceUrl.defaultZone=http://eureka-1:8761/eureka,http://eureka-2:8761/eureka
+    networks:
+      - swarm_discovery
+  eureka-2:
+    image: hello-world/eureka-server:lastest
+    environment:
+      - eureka.client.healthcheck.enabled=true
+      - server.port=8761
+      - management.security.enabled=false
+      - eureka.instance.preferIpAddress=true
+      - eureka.client.serviceUrl.defaultZone=http://eureka-1:8761/eureka,http://eureka-2:8761/eureka
+    networks:
+      - swarm_discovery
+
+networks:
+  swarm_discovery:

@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: hello-service
+  sleuth:
+    sampler:
+      percentage: 1
+  aop:
+    proxy-target-class: true
+service:
+  configuration:
+    peopleServiceServiceTemplate: http://api-gateway/people-service/person/{userName}
+    tweetSocialServiceServiceTemplate: http://api-gateway/social-service/social/tweets/{userName}
+ribbon:
+  eager-load:
+    enabled: true
+
+
+eureka:
+  client:
+    registry-fetch-interval-seconds: 5

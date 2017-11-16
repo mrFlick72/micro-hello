@@ -1,0 +1,82 @@
+version: "2.1"
+
+services:
+  eureka:
+    image: hello-world/eureka-server:lastest
+    ports:
+      - "8761:8761"
+    environment:
+      - eureka.client.healthcheck.enabled=true
+      - server.port=8761
+      - management.security.enabled=false
+      - eureka.instance.preferIpAddress=true
+      - eureka.client.serviceUrl.defaultZone=http://eureka:8761/eureka/
+    networks:
+      - discovery
+
+  api-gateway:
+    image: hello-world/api-gateway-server:lastest
+    ports:
+      - "80:8080"
+    environment:
+      - eureka.client.healthcheck.enabled=true
+      - spring.rabbitmq.host=rabbitmq
+      - management.security.enabled=false
+      - eureka.instance.preferIpAddress=true
+      - eureka.client.serviceUrl.defaultZone=http://eureka:8761/eureka/
+    networks:
+      - discovery
+      - infrastructure_messaging
+
+  zipkin:
+    image: hello-world/zipkin-server:lastest
+    ports:
+      - "8050:8080"
+    environment:
+      - eureka.client.healthcheck.enabled=true
+      - spring.rabbitmq.host=rabbitmq
+      - management.security.enabled=false
+      - eureka.instance.preferIpAddress=true
+      - eureka.client.serviceUrl.defaultZone=http://eureka:8761/eureka/
+    networks:
+      - discovery
+      - infrastructure_messaging
+
+  turbine:
+    image: hello-world/turbine-server:lastest
+    ports:
+      - "7070:7070"
+    environment:
+      - eureka.client.healthcheck.enabled=true
+      - turbine.stream.port=7070
+      - management.security.enabled=false
+      - spring.rabbitmq.host=rabbitmq
+      - eureka.instance.preferIpAddress=true
+      - eureka.client.serviceUrl.defaultZone=http://eureka:8761/eureka/
+    networks:
+      - discovery
+      - infrastructure_messaging
+      - turbine
+
+  spring-boot-admin:
+    image: hello-world/spring-boot-admin:lastest
+    ports:
+      - "8000:8080"
+    environment:
+      - eureka.client.healthcheck.enabled=true
+      - management.security.enabled=false
+      - spring.boot.admin.routes.endpoints=env,metrics,trace,dump,jolokia,info,configprops,trace,logfile,activiti,refresh,flyway,liquibase,heapdump,hystrix.stream
+      - spring.boot.admin.turbine.url=http://turbine:7070/turbine.stream?cluster=default
+      - eureka.instance.preferIpAddress=true
+      - eureka.client.serviceUrl.defaultZone=http://eureka:8761/eureka/
+    networks:
+      - discovery
+      - turbine
+
+networks:
+  discovery:
+    driver: bridge
+  infrastructure_messaging:
+    external: true
+  turbine:
+    driver: bridge

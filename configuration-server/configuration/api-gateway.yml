@@ -1,0 +1,33 @@
+zuul:
+  host:
+    max-total-connections: 2000
+    max-per-route-connections: 200
+    connect-timeout-millis: 20000
+    socket-timeout-millis: 20000
+  retryable: true
+  ignoredServices: '*'
+  routes:
+    api-gateway: /api-gateway/**
+    social-service: /social-service/**
+    people-service:
+      serviceId: green-people-service
+      path: /people-service/**
+    hello-service: /hello-service/**
+  ribbon:
+    eager-load:
+      enabled: true
+
+ribbon:
+  eager-load:
+    enabled: true
+
+hystrix:
+  command:
+    default:
+      execution:
+        timeout:
+          enabled: false
+
+eureka:
+  client:
+    registry-fetch-interval-seconds: 5

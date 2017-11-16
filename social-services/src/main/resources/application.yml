@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: social-service
+  sleuth:
+    sampler:
+      percentage: 1
+  social:
+    twitter:
+      app-id:
+      app-secret:
+
+service:
+  configuration:
+    maxTweets: 5
+
+
+eureka:
+  client:
+    registry-fetch-interval-seconds: 5

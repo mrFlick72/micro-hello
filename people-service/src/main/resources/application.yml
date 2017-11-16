@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: people-service
+  sleuth:
+    sampler:
+      percentage: 1
+
+eureka:
+  client:
+    registry-fetch-interval-seconds: 5

@@ -1,0 +1,54 @@
+version: "2.1"
+
+services:
+  hello-service:
+    image: hello-world/hello-service:lastest
+    environment:
+      - eureka.client.healthcheck.enabled=true
+      - management.security.enabled=false
+      - spring.rabbitmq.host=rabbitmq
+      - eureka.instance.preferIpAddress=true
+      - eureka.client.serviceUrl.defaultZone=http://eureka:8761/eureka/
+    networks:
+      - cloudnative_discovery
+      - infrastructure_messaging
+
+  people-service:
+    image: hello-world/people-service:lastest
+    ports:
+      - "8080:8080"
+    environment:
+      - eureka.client.healthcheck.enabled=true
+      - management.security.enabled=false
+      - spring.rabbitmq.host=rabbitmq
+      - spring.redis.host=redis
+      - eureka.instance.preferIpAddress=true
+      - eureka.client.serviceUrl.defaultZone=http://eureka:8761/eureka/
+    networks:
+      - infrastructure_cache
+      - cloudnative_discovery
+      - infrastructure_messaging
+      - monitoring_monitor
+
+  social-service:
+    image: hello-world/social-service:lastest
+    environment:
+      - eureka.client.healthcheck.enabled=true
+      - management.security.enabled=false
+      - spring.rabbitmq.host=rabbitmq
+      - eureka.instance.preferIpAddress=true
+      - eureka.client.serviceUrl.defaultZone=http://eureka:8761/eureka/
+    networks:
+      - cloudnative_discovery
+      - infrastructure_messaging
+
+
+networks:
+  cloudnative_discovery:
+    external: true
+  infrastructure_cache:
+    external: true
+  infrastructure_messaging:
+    external: true
+  monitoring_monitor:
+    external: true
